@@ -6,10 +6,12 @@ import {
   Image,
   AppRegistry,
   TouchableHighlight,
-  TextInput
+  TextInput,
 } from 'react-native';
 
 import Voice from 'react-native-voice';
+import { Footer,Button, Container, Header, Content, Item, Input, Icon,List, ListItem,  } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 export default class App extends Component {
   constructor(props) {
@@ -131,86 +133,22 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <Container >
         <Text style={styles.welcome}>
           Welcome to React Native Voice!
         </Text>
         <Text style={styles.instructions}>
           Press the button and start speaking.
         </Text>
-        <Text
-          style={styles.stat}>
-          {`Started: ${this.state.started}`}
-        </Text>
-        <Text
-          style={styles.stat}>
-          {`Recognized: ${this.state.recognized}`}
-        </Text>
-        <Text
-          style={styles.stat}>
-          {`Pitch: ${this.state.pitch}`}
-        </Text>
-        <Text
-          style={styles.stat}>
-          {`Error: ${this.state.error}`}
-        </Text>
-        {/* <Text
-          style={styles.stat}>
-          Results
-        </Text>
-        {this.state.results.map((result, index) => {
-          return (
-            <Text
-              key={`result-${index}`}
-              style={styles.stat}>
-              {result}
-            </Text>
-          )
-        })}
-        <Text
-          style={styles.stat}>
-          Partial Results
-        </Text> */}
-        <Text>{this.state.partialResults.length}</Text>
-        {this.state.partialResults.map((result, index) => {
-          return (
-            <Text
-              key={`partial-result-${index}`}
-              style={styles.stat}>
-              {result}
-            </Text>
-          )
-        })
-        }
-        <Text
-          style={styles.stat}>
-          {`End: ${this.state.end}`}
-        </Text>
-        <Text>Cleopatra loves Jesse.</Text>
-        <TextInput value={this.state.partialResults[0]} />
-        <TouchableHighlight onPress={this._startRecognizing.bind(this)}>
-          <Image
-            style={styles.button}
-            source={require('./buttons_PNG5.png')}
-          />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._stopRecognizing.bind(this)}>
-          <Text
-            style={styles.action}>
-            Stop Recognizing
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._cancelRecognizing.bind(this)}>
-          <Text
-            style={styles.action}>
-            Cancel
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._destroyRecognizer.bind(this)}>
-          <Text
-            style={styles.action}>
-            Destroy
-          </Text>
-        </TouchableHighlight>
+      
+        <View style={styles.inputContainer}>          
+              <Input  style={styles.placeInput} placeholder='Rounded Textbox' value={this.state.results[0]}/>    
+              <Button style={styles.placeButton} rounded success  onPress={this._startRecognizing.bind(this)} >
+                  <Icon name='mic' /> 
+              </Button>
+          </View>
+       
+        </Container>
       </View>
     );
   }
@@ -248,4 +186,25 @@ const styles = StyleSheet.create({
     color: '#B0171F',
     marginBottom: 1,
   },
+  inputContainer: {
+    position: 'absolute',
+    flex: 0.1,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    bottom: 12,
+   
+  },
+  placeInput: {
+      width: "90%",
+      borderWidth: 2,
+      borderColor: '#FF5722',
+      borderRadius: 20 ,
+      padding: 10,
+  },
+  placeButton: {
+    width: "16%",
+    margin: 5
+  }
 });
