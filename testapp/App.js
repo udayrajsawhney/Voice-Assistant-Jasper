@@ -7,11 +7,38 @@ import {
   AppRegistry,
   TouchableHighlight,
   TextInput,
+  ScrollView
 } from 'react-native';
+
+import io from 'socket.io-client';
+
+// import SocketIO from 'react-native-socketio'
 
 import Voice from 'react-native-voice';
 import { Footer,Button, Container, Header, Content, Item, Input, Icon,List, ListItem,  } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
+
+//The bubbles that appear on the left or the right for the messages.
+class MessageBubble extends Component {
+  render() {
+    //These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
+    let leftSpacer = this.props.direction === 'left' ? null : <View style={{width: 70}}/>;
+    let rightSpacer = this.props.direction === 'left' ? <View style={{width: 70}}/> : null;
+    let bubbleStyles = this.props.direction === 'left' ? [styles.messageBubble, styles.messageBubbleLeft] : [styles.messageBubble, styles.messageBubbleRight];
+    let bubbleTextStyle = this.props.direction === 'left' ? styles.messageBubbleTextLeft : styles.messageBubbleTextRight;
+    return (
+        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+            {leftSpacer}
+            <View style={bubbleStyles}>
+              <Text style={bubbleTextStyle}>
+                {this.props.text}
+              </Text>
+            </View>
+            {rightSpacer}
+          </View>
+      );
+  }
+}
 
 export default class App extends Component {
   constructor(props) {
@@ -24,7 +51,18 @@ export default class App extends Component {
       started: '',
       results: [],
       partialResults: [],
+      voiceText: '',
+      messages: [{
+        text: 'How can I help you',
+        direction: 'left'
+      },
+      {
+        text: 'puka',
+        direction: 'right'
+      }]      
     };
+    this.sendMsg = this.sendMsg.bind(this)
+    this._startRecognizing = this._startRecognizing.bind(this);
     Voice.onSpeechStart = this.onSpeechStart.bind(this);
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
@@ -32,7 +70,10 @@ export default class App extends Component {
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
     Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
+  
+  
   }
+  socket = io.connect('http://192.168.43.94:4500', { transports: ['websocket'] });    
 
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
@@ -65,6 +106,7 @@ export default class App extends Component {
   onSpeechResults(e) {
     this.setState({
       results: e.value,
+      voiceText: e.value[0]
     });
   }
 
@@ -88,7 +130,7 @@ export default class App extends Component {
       started: '',
       results: [],
       partialResults: [],
-      end: ''
+      end: '',
     });
     try {
       await Voice.start('en-US');
@@ -130,20 +172,43 @@ export default class App extends Component {
     });
   }
 
+  sendMsg () {
+    this.socket.emit('message', { msg: this.state.voiceText });
+    this.setState({messages: [ ...this.state.messages, {
+      text: this.state.voiceText,
+      direction: 'right'
+    } ]})
+  }
+
   render() {
+    // let messages = [];
+    // this.state.messages.forEach(function(message, index) {
+    //   messages.push(
+    //       <MessageBubble key={index} direction={message.direction} text={message.text}/>
+    //     );
+    // });
+
     return (
       <View style={styles.container}>
-      <Container >
+      <Container>
         <Text style={styles.welcome}>
           Welcome to React Native Voice!
         </Text>
         <Text style={styles.instructions}>
           Press the button and start speaking.
         </Text>
+
+        {/* msgs view */}
+
+        <ScrollView ref={(ref) => { this.scrollView = ref }} style={styles.messages}>
+          {
+            this.state.messages.map((message, index) => <MessageBubble key={index} direction={message.direction} text={message.text}/>)
+          }
+        </ScrollView>
       
         <View style={styles.inputContainer}>          
-              <Input  style={styles.placeInput} placeholder='Rounded Textbox' value={this.state.results[0]}/>    
-              <Button style={styles.placeButton} rounded success  onPress={this._startRecognizing.bind(this)} >
+              <Input  style={styles.placeInput} onSubmitEditing={this.sendMsg} placeholder='Rounded Textbox' onChangeText={(text) => this.setState({voiceText: text})} value={this.state.voiceText}/>    
+              <Button style={styles.placeButton} rounded success onSubmitEditing={text => this.sendMsg(text)} onPress={this._startRecognizing} >
                   <Icon name='mic' /> 
               </Button>
           </View>
@@ -206,5 +271,38 @@ const styles = StyleSheet.create({
   placeButton: {
     width: "16%",
     margin: 5
-  }
+  },
+
+  // msg bubble
+  messageBubble: {
+    borderRadius: 5,
+    marginTop: 8,
+    marginRight: 10,
+    marginLeft: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    flexDirection:'row',
+    flex: 1
+},
+
+messageBubbleLeft: {
+  backgroundColor: '#d5d8d4',
+},
+
+messageBubbleTextLeft: {
+  color: 'black'
+},
+
+messageBubbleRight: {
+  backgroundColor: '#66db30'
+},
+
+messageBubbleTextRight: {
+  color: 'white'
+},
+
+messages: {
+  flex: 1
+},
+
 });
