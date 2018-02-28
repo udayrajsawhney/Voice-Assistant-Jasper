@@ -1,0 +1,80 @@
+<div class="msg-container">
+    <div class="msg-inner">
+        <div class="msg-bbl-0">Hello</div>
+        <div class="msg-bbl-1">Hi</div>
+        <div class="msg-bbl-0">Hello</div>
+    </div>
+    <hr class="divider">
+    <div class="form">
+        <form action="">
+            <input type="text" class="jtext" palceholder="Your message">
+            <input type="submit" value="submit">
+        </form>
+    </div>
+</div>
+
+<style>
+    /* General CSS Setup */
+body{
+  background-color: lightblue;
+  font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+  padding: 0;
+  margin: 0;
+}
+
+.msg-container {
+  background: tomato;
+  width: 500px;
+  padding-right: 20px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, .6);
+  display: grid;
+}
+
+.msg-inner {
+  padding: 10px;
+}
+
+.msg-bbl-0, .msg-bbl-1 {
+  background: #fff;
+  color: #fff;
+  padding: 5px;
+  margin-bottom: 7px;
+  width: 90%;
+  position: relative;
+}
+
+.msg-bbl-0 {
+  background: rebeccapurple;
+  border-radius: 9px 9px 9px 0;
+}
+
+.msg-bbl-1 {
+  background: gold;
+  border-radius: 9px 9px 0 9px;
+  right: -50px;
+}
+
+.divider {
+  width: 103.5%;
+  border: 1px solid rgba(0, 0, 0, .6);
+}
+
+.form {
+  width: 102%;
+  padding: 5px;
+}
+
+.form form {
+  display: grid;
+  grid-template-columns: 88% 10%;
+  grid-column-gap: 5px
+}
+
+.jtext {
+  padding: 10px;
+  font-size: 15px;
+  border: none;
+  box-shadow: 0 0 6px rgba(0, 0, 0, .7);
+  border-radius: 7px;
+}
+</style>

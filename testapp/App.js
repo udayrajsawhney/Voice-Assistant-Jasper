@@ -71,12 +71,25 @@ export default class App extends Component {
     Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
   
+  this.socket = io.connect('http://192.168.43.140:4500', { transports: ['websocket'] });    
+    
   
   }
-  socket = io.connect('http://192.168.43.94:4500', { transports: ['websocket'] });    
 
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
+  }
+
+  componentDidMount() {
+    this.socket.on('reply', data => {
+      console.log('checking')
+      console.log('--->', data.message);
+      // console.log(this.state.messages);
+      // this.state.messages.push({ text: data.message, direction: 'left' })
+      // console.log('fgfht',this.state.messages)
+      // console.log('checking2')
+      this.setState({ messages: [ ...this.state.messages, { text: data.message, direction: 'left' } ] })
+    })
   }
 
   onSpeechStart(e) {

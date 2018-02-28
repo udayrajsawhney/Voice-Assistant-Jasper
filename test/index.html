@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=s, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<input type="text" id="msg">
+<button onclick="sendMsg()">Send</button>
+<script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+<script>
+const $msg = document.querySelector('#msg')
+const socket = io.connect('http://192.168.43.179:8080/')
+const sendMsg = _ => {
+    socket.emit('light')
+}
+socket.on('reply', data => console.log(data.mg))
+</script>
+</body>
+</html>
