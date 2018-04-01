@@ -1,0 +1,8 @@
+.card-actions {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.toggle {
+    transform: translateY(7px);
+}

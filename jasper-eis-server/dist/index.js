@@ -8,6 +8,10 @@ var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _socket = require('socket.io');
 
 var _socket2 = require('socket.io-client');
@@ -24,7 +28,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // global variables
 // for real time data streaming
-// for rendering documents and handling requests
+// http connects both express and socket.io
+// all module imports here
 var PORT = _config2.default.port;
 // import PythonShell from 'python-shell' // for doing nlp
 // import nlp from 'compromise' // for nlp
@@ -32,16 +37,16 @@ var PORT = _config2.default.port;
 // console.log(nlp(`Turn on the lights.`).normalize().out('text'))
 
 // all relative imports here
-// http connects both express and socket.io
-// all module imports here
+// for rendering documents and handling requests
 
 var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
 var clients = (0, _socket.listen)(app.server, { pingTimeout: 30000 }); // { pingTimeout: 30000 } => makes compatible with react-native
 
+app.use(_express2.default.static(__dirname));
 // all http routes here
 app.get('/*', function (req, res) {
-    return res.send('hello');
+    return res.sendFile(_path2.default.join(__dirname, './index.html'));
 }); // TODO: render the actual frontend
 
 // all socket routes goes here

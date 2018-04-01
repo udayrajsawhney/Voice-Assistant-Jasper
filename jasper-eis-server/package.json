@@ -4,24 +4,35 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src --presets env,stage-0\"",
-    "build": "babel src -s -D -d dist --presets env,stage-0",
+    "dev": "nodemon -w server --exec \"babel-node server --presets env,stage-0\"",
+    "build": "babel server -s -D -d dist --presets env,stage-0",
     "start": "nodemon dist",
-    "prestart": "npm run -s build"
+    "prestart": "npm run -s build",
+    "build:client": "webpack --mode production"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "compromise": "^11.5.1",
     "express": "^4.16.2",
+    "material-ui": "^0.20.0",
     "python-shell": "^0.5.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "nodemon": "^1.14.12"
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
+    "nodemon": "^1.14.12",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
   }
 }

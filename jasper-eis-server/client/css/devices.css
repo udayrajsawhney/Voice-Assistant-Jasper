@@ -1,0 +1,15 @@
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    height: 250px;
+    grid-gap: 15px;
+    padding: 10px;
+}
+
+.heading {
+    font-size: 35px;
+}
+
+.devices {
+    padding: 10px;
+}
