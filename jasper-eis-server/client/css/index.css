@@ -3,4 +3,29 @@ body {
   padding: 0;
   font-family: sans-serif;
   background: #d1d1d1;
+  overflow-x: hidden;
+}
+
+.content {
+  transform: translateX(20%);
+}
+
+h1 {
+  text-align: center;
+}
+
+.menu-header {
+  text-align: center;
+  font-size: 30px;
+  padding: 12px;
+  background: #42b8dc;
+  color: #fff;
+}
+
+.app-bar {
+  z-index: 1305 !important;
+}
+
+.menu-items {
+  transform: translateY(80px);
 }

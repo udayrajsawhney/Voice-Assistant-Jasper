@@ -3,7 +3,12 @@ import express from 'express' // for rendering documents and handling requests
 import http from 'http' // http connects both express and socket.io
 import path from 'path'
 import { listen } from 'socket.io' // for real time data streaming
-import io from 'socket.io-client'
+import io from 'socket.io-client';
+import moment from 'moment';
+const {Stamp, Appliance, rPi} = require('./models/models');
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/eis');
 // import PythonShell from 'python-shell' // for doing nlp
 // import nlp from 'compromise' // for nlp
 
@@ -22,32 +27,67 @@ app.use(express.static(__dirname))
 // all http routes here
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, './index.html'))) // TODO: render the actual frontend
 
+// database from rpi
+const dbrpi = io.connect('http://192.168.43.178:8080')
+dbrpi.emit('database', 'database')
+dbrpi.on('dbtime', data => {
+    console.log(data)
+    var t = Stamp({
+        timeSt: data.time,
+        type: data.type
+    });
+    t.save().then(
+        (res) => {
+            console.log(res);
+        },
+        (err) => console.log(err)
+    );
+})
+
+const getDur = (aid) => new Promise((resolve, reject) => {
+    Stamp.find({}).then(
+        (docs) => {
+            const dat = docs
+            // console.log(dat)
+            const give = []
+            for(let i = 0; i < 2 || i < dat.length - 2; i += 2) {
+                let start = dat[i].timeSt
+                let stop = dat[i + 1].timeSt               
+                give.push({ start, stop, duration: moment(stop)-moment(start) })
+            }
+            resolve(give)
+            // socket.to('iwant').emit('durdat', { aid: 0, tab: give })
+        },
+        (err) => reject('oh no!!')
+    );
+})
+
+// const giveData = io.connect('http://localhost:4500')
+
 // all socket routes goes here
 clients.sockets.on('connection', socket => {
-    console.log('A fucker just joined on', socket.id)
+    console.log('A client just joined on', socket.id)
+    socket.on('iwant', room => {
+        socket.join(room);
+        console.log('iwant');
+    })
+
+    socket.on('durreq', d => {
+        console.log(d.aid)
+        getDur(0).then(give => {
+            console.log(give)
+            socket.emit('durdat', { aid: 0, tab: give });
+            console.log('what');
+        })
+    })
+    
     socket.on('message', data => {
-        const rpi = io.connect('http://192.168.43.179:8080') // RPi's address            
-    	// process the message here... using nlp techniques, then emit the reply to client and also to raspberry pi server
-        // const options = {
-        //     mode: 'text',
-        //     scriptPath: __dirname + '/../',
-        //     args: [ data.msg ]
-        // }
-        // PythonShell.run('nlp.py', options, (err, results) => {
-        //     if (err) throw err;
-        //     // results is an array consisting of messages collected during execution
-        //     console.log(results[0]);
-        // })
-        // let message = data.msg
-        // let normailzed_message = nlp(data.msg).normalize().out('text')
-        // let verbs = nlp(normailzed_message).verbs().out('array')
-        // let nouns = nlp(normailzed_message).nouns().out('array')
-        // let isQuestion = nlp(normailzed_message).questions().out('array').length > 0      
-        // console.log(`🐱‍👤Verbs:\n${verbs}\n✨Nouns:\n${nouns}\n🙋‍Question:\n${isQuestion}`)    
+        const rpi = io.connect('http://192.168.43.178:8080') // RPi's ad 
         console.log('client -->', data.msg)
         rpi.emit('light', { message : data.msg })
         rpi.on('reply', data => {
             socket.emit('reply', { message: data.mg })
+
             console.log('PI --->', data.mg)        
         })
     })

@@ -57,7 +57,7 @@ export default class App extends Component {
         direction: 'left'
       },
       {
-        text: 'puka',
+        text: 'Connected to Server',
         direction: 'right'
       }]      
     };
