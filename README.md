@@ -3,7 +3,7 @@ Personal Voice assistant for Home Automation
 
 ## Mobile App
 
-<img src="https://github.com/udayrajsawhney/Voice-Assistant-Jasper/blob/master/screenshots/app2.jpg" width="180" height="370"/><img src="https://github.com/udayrajsawhney/Voice-Assistant-Jasper/blob/master/screenshots/app1.jpg" width="180" height="370"/>
+<img src="https://github.com/udayrajsawhney/Voice-Assistant-Jasper/blob/master/screenshots/app2.jpg" width="180" height="370"/> <img src="https://github.com/udayrajsawhney/Voice-Assistant-Jasper/blob/master/screenshots/app1.jpg" width="180" height="370"/>
 
 ## Web app
 
