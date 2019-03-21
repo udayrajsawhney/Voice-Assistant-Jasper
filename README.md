@@ -1,5 +1,15 @@
 # Voice-Assistant-Jasper
-Personal Voice assistant for Home Automation
+Personal Voice assistant for Home Automation.
+
+- Software Stack
+  - Node.js, Express.js
+  - React Native
+  - Angular 5
+  - Python
+  - Socket.io
+- Hardware Stack
+  - raspberry pi model 3
+  - Sensors for temperature, humitidy, motors, servo motors.
 
 ## Mobile App
 
